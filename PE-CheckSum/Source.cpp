@@ -98,6 +98,9 @@ main()
     printf("headerCheckSum=%p,checkSum=%p\n", headerCheckSum, checkSum);
     MyCheckSumMappedFile(Buffer, len, &headerCheckSum, &checkSum);
     printf("headerCheckSum=%p,checkSum=%p\n", headerCheckSum, checkSum);
-
+    if (Buffer)
+    {
+        delete[] Buffer;
+    }
     return 0;
 }
