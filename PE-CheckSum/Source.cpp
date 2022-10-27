@@ -28,23 +28,19 @@ LoadPEFile(const char *FileName, char **Buffer)
 static WORD
 CalcCheckSum(DWORD StartValue, LPVOID BaseAddress, DWORD WordCount)
 {
-    LPWORD Ptr;
-    DWORD Sum;
-    DWORD i;
-
-    Sum = StartValue;
-    Ptr = (LPWORD)BaseAddress;
-    for (i = 0; i < WordCount; i++)
+    LPWORD p = (LPWORD)BaseAddress;
+    DWORD sum = StartValue;
+    for (DWORD i = 0; i < WordCount; i++)
     {
-        Sum += *Ptr;
-        if (HIWORD(Sum) != 0)
+        sum += *p;
+        if (((sum >> 16) & 0xffff) != 0)
         {
-            Sum = LOWORD(Sum) + HIWORD(Sum);
+            sum = (sum & 0xffff) + ((sum >> 16) & 0xffff);
         }
-        Ptr++;
+        p++;
     }
 
-    return (WORD)(LOWORD(Sum) + HIWORD(Sum));
+    return (WORD)((sum & 0xffff) + ((sum >> 16) & 0xffff));
 }
 
 PIMAGE_NT_HEADERS WINAPI
